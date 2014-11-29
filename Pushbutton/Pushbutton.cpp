@@ -7,13 +7,18 @@ Pushbutton::Pushbutton(unsigned char pin, unsigned char pullUp, unsigned char de
   _pin = pin;
   _pullUp = pullUp;
   _defaultState = defaultState;
+  gsdpState = 0;
+  gsdrState = 0;
+  gsdpPrevTimeMillis = 0;
+  gsdrPrevTimeMillis = 0;
+  initialized = false;
 }
 
 // wait for button to be pressed
 void Pushbutton::waitForPress()
 {
   init(); // initialize if necessary
-  
+
   do
   {
     while (!_isPressed()); // wait for button to be pressed
@@ -26,7 +31,7 @@ void Pushbutton::waitForPress()
 void Pushbutton::waitForRelease()
 {
   init(); // initialize if necessary
-  
+
   do
   {
     while (_isPressed()); // wait for button to be released
@@ -57,55 +62,46 @@ boolean Pushbutton::isPressed()
 // should be called repeatedly in a loop.
 boolean Pushbutton::getSingleDebouncedPress()
 {
-  static unsigned char state = 0;
-  static unsigned long prevTimeMillis = 0;
-  
   unsigned long timeMillis = millis();
-  
+
   init(); // initialize if necessary
-  
-  switch (state)
+
+  switch (gsdpState)
   {
     case 0:
-      if (!_isPressed())                       // if button is released
+      if (!_isPressed())                  // if button is released
       {
-        prevTimeMillis = timeMillis;
-        state = 1;                            // proceed to next state
+        gsdpPrevTimeMillis = timeMillis;
+        gsdpState = 1;                    // proceed to next state
       }
       break;
-      
+
     case 1:
-      if (timeMillis - prevTimeMillis >= 15)  // if 15 ms or longer has elapsed
-      {
-        if (!_isPressed())                     // and button is still released
-          state = 2;                          // proceed to next state
-        else
-          state = 0;                          // go back to previous (initial) state
-      }
+      if ((timeMillis - gsdpPrevTimeMillis >= 15) && !_isPressed()) // if 15 ms or longer has elapsed and button is still released
+        gsdpState = 2;                    // proceed to next state
+      else if (_isPressed())
+        gsdpState = 0;                    // button is pressed or bouncing, so go back to previous (initial) state
       break;
-      
+
     case 2:
-      if (_isPressed())                        // if button is now pressed
+      if (_isPressed())                   // if button is now pressed
       {
-        prevTimeMillis = timeMillis;
-        state = 3;                            // proceed to next state
+        gsdpPrevTimeMillis = timeMillis;
+        gsdpState = 3;                    // proceed to next state
       }
       break;
-      
+
     case 3:
-      if (timeMillis - prevTimeMillis >= 15)  // if 15 ms or longer has elapsed
+      if ((timeMillis - gsdpPrevTimeMillis >= 15) && _isPressed())  // if 15 ms or longer has elapsed and button is still pressed
       {
-        if (_isPressed())                      // and button is still pressed
-        {
-          state = 0;                          // next state becomes initial state
-          return true;                        // report button press
-        }
-        else
-          state = 2;                          // go back to previous state
+        gsdpState = 0;                    // next state becomes initial state
+        return true;                      // report button press
       }
+      else if (!_isPressed())
+        gsdpState = 2;                    // button is released or bouncing, so go back to previous state
       break;
   }
-  
+
   return false;
 }
 
@@ -116,55 +112,46 @@ boolean Pushbutton::getSingleDebouncedPress()
 // should be called repeatedly in a loop.
 boolean Pushbutton::getSingleDebouncedRelease()
 {
-  static unsigned char state = 0;
-  static unsigned long prevTimeMillis = 0;
-  
-  unsigned long timeMillis = millis();
+  unsigned int timeMillis = millis();
 
   init(); // initialize if necessary
-  
-  switch (state)
+
+  switch (gsdrState)
   {
     case 0:
-      if (_isPressed())                        // if button is pressed
+      if (_isPressed())                   // if button is pressed
       {
-        prevTimeMillis = timeMillis;
-        state = 1;                            // proceed to next state
+        gsdrPrevTimeMillis = timeMillis;
+        gsdrState = 1;                    // proceed to next state
       }
       break;
-      
+
     case 1:
-      if (timeMillis - prevTimeMillis >= 15)  // if 15 ms or longer has elapsed
-      {
-        if (_isPressed())                      // and button is still pressed
-          state = 2;                          // proceed to next state
-        else
-          state = 0;                          // go back to previous (initial) state
-      }
+      if ((timeMillis - gsdrPrevTimeMillis >= 15) && _isPressed())  // if 15 ms or longer has elapsed and button is still pressed
+        gsdrState = 2;                    // proceed to next state
+      else if (!_isPressed())
+        gsdrState = 0;                    // button is released or bouncing, so go back to previous (initial) state
       break;
-      
+
     case 2:
-      if (!_isPressed())                       // if button is now released
+      if (!_isPressed())                  // if button is now released
       {
-        prevTimeMillis = timeMillis;
-        state = 3;                            // proceed to next state
+        gsdrPrevTimeMillis = timeMillis;
+        gsdrState = 3;                    // proceed to next state
       }
       break;
-      
+
     case 3:
-      if (timeMillis - prevTimeMillis >= 15)  // if 15 ms or longer has elapsed
+      if ((timeMillis - gsdrPrevTimeMillis >= 15) && !_isPressed()) // if 15 ms or longer has elapsed and button is still released
       {
-        if (!_isPressed())                     // and button is still released
-        {
-          state = 0;                          // next state becomes initial state
-          return true;                        // report button release
-        }
-        else
-          state = 2;                          // go back to previous state
+        gsdrState = 0;                    // next state becomes initial state
+        return true;                      // report button release
       }
+      else if (_isPressed())
+        gsdrState = 2;                    // button is pressed or bouncing, so go back to previous state
       break;
   }
-  
+
   return false;
 }
 
@@ -175,12 +162,12 @@ void Pushbutton::init2()
     pinMode(_pin, INPUT_PULLUP);
   else
     pinMode(_pin, INPUT); // high impedance
-    
+
   delayMicroseconds(5); // give pull-up time to stabilize
 }
 
 // button is pressed if pin state differs from default state
 inline boolean Pushbutton::_isPressed()
 {
-  return (digitalRead(_pin) == LOW) ^ (_defaultState == DEFAULT_STATE_LOW); 
+  return (digitalRead(_pin) == LOW) ^ (_defaultState == DEFAULT_STATE_LOW);
 }
