@@ -10,7 +10,7 @@
 #ifndef Pushbutton_h
 #define Pushbutton_h
 
-#include <stdint.h>
+#include <Arduino.h>
 
 // This ZUMO_BUTTON definition is for the Zumo Shield.  It doesn't
 // really belong here in this general Pushbutton library and will

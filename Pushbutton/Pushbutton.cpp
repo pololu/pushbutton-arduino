@@ -1,6 +1,6 @@
 #include "Pushbutton.h"
 
-void PushbuttonStateMachine::PushbuttonStateMachine()
+PushbuttonStateMachine::PushbuttonStateMachine()
 {
   state = 0;
 }
