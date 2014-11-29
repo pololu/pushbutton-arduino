@@ -1,12 +1,7 @@
 #include "Pushbutton.h"
 
-// constructor; takes arguments specifying whether to enable internal pull-up
-// and the default state of the pin that the button is connected to
-Pushbutton::Pushbutton(unsigned char pin, unsigned char pullUp, unsigned char defaultState)
+PushbuttonBase::PushbuttonBase()
 {
-  _pin = pin;
-  _pullUp = pullUp;
-  _defaultState = defaultState;
   gsdpState = 0;
   gsdrState = 0;
   gsdpPrevTimeMillis = 0;
@@ -15,7 +10,7 @@ Pushbutton::Pushbutton(unsigned char pin, unsigned char pullUp, unsigned char de
 }
 
 // wait for button to be pressed
-void Pushbutton::waitForPress()
+void PushbuttonBase::waitForPress()
 {
   init(); // initialize if necessary
 
@@ -28,7 +23,7 @@ void Pushbutton::waitForPress()
 }
 
 // wait for button to be released
-void Pushbutton::waitForRelease()
+void PushbuttonBase::waitForRelease()
 {
   init(); // initialize if necessary
 
@@ -41,14 +36,14 @@ void Pushbutton::waitForRelease()
 }
 
 // wait for button to be pressed, then released
-void Pushbutton::waitForButton()
+void PushbuttonBase::waitForButton()
 {
   waitForPress();
   waitForRelease();
 }
 
 // indicates whether button is pressed
-boolean Pushbutton::isPressed()
+bool PushbuttonBase::isPressed()
 {
   init(); // initialize if necessary
 
@@ -60,7 +55,7 @@ boolean Pushbutton::isPressed()
 // released for at least 15 ms and then pressed for at least 15 ms before
 // reporting the press.  This function handles all necessary debouncing and
 // should be called repeatedly in a loop.
-boolean Pushbutton::getSingleDebouncedPress()
+bool PushbuttonBase::getSingleDebouncedPress()
 {
   unsigned long timeMillis = millis();
 
@@ -110,7 +105,7 @@ boolean Pushbutton::getSingleDebouncedPress()
 // pressed for at least 15 ms and then released for at least 15 ms before
 // reporting the release.  This function handles all necessary debouncing and
 // should be called repeatedly in a loop.
-boolean Pushbutton::getSingleDebouncedRelease()
+bool PushbuttonBase::getSingleDebouncedRelease()
 {
   unsigned int timeMillis = millis();
 
@@ -155,6 +150,15 @@ boolean Pushbutton::getSingleDebouncedRelease()
   return false;
 }
 
+// constructor; takes arguments specifying whether to enable internal pull-up
+// and the default state of the pin that the button is connected to
+Pushbutton::Pushbutton(uint8_t pin, uint8_t pullUp, uint8_t defaultState)
+{
+  _pin = pin;
+  _pullUp = pullUp;
+  _defaultState = defaultState;
+}
+
 // initializes I/O pin for use as button inputs
 void Pushbutton::init2()
 {
@@ -167,7 +171,7 @@ void Pushbutton::init2()
 }
 
 // button is pressed if pin state differs from default state
-inline boolean Pushbutton::_isPressed()
+inline bool Pushbutton::_isPressed()
 {
   return (digitalRead(_pin) == LOW) ^ (_defaultState == DEFAULT_STATE_LOW);
 }
