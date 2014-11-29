@@ -1,11 +1,82 @@
 #include "Pushbutton.h"
 
+void PushbuttonStateMachine::PushbuttonStateMachine()
+{
+  state = 0;
+}
+
+// state 0: The value is considered to be true.
+// state 1: The value was considered to be true, but there
+//   was a recent false reading so it might be falling.
+// state 2: The value is considered to be false.
+// state 3: The value was considered to be false, but there
+//   was a recent true reading so it might be rising.
+//
+// The transition from state 3 to state 0 is the point where we
+// have successfully detected a rising edge an we return true.
+//
+// The prevTimeMillis variable holds the last time that we
+// transitioned to states 1 or 3.
+bool PushbuttonStateMachine::getSingleDebouncedRisingEdge(bool value)
+{
+  uint16_t timeMillis = millis();
+
+  switch (state)
+  {
+  case 0:
+    // If value is false, proceed to the next state.
+    if (!value)
+    {
+      prevTimeMillis = timeMillis;
+      state = 1;
+    }
+    break;
+
+  case 1:
+    if (value)
+    {
+      // The value is true or bouncing, so go back to previous (initial)
+      // state.
+      state = 0;
+    }
+    else if ((uint16_t)(timeMillis - prevTimeMillis) >= 15)
+    {
+      // It has been at least 15 ms and the value is still false, so
+      // proceed to the next state.
+      state = 2;
+    }
+    break;
+
+  case 2:
+    // If the value is true, proceed to the next state.
+    if (value)
+    {
+      prevTimeMillis = timeMillis;
+      state = 3;
+    }
+    break;
+
+  case 3:
+    if (!value)
+    {
+      // The value is false or bouncing, so go back to previous state.
+      state = 2;
+    }
+    else if ((uint16_t)(timeMillis - prevTimeMillis) >= 15)
+    {
+      // It has been at least 15 ms and the value is still true, so
+      // go back to the initial state and report this rising edge.
+      state = 0;
+      return true;
+    }
+    break;
+  }
+
+  return false;
+}
+
 PushbuttonBase::PushbuttonBase()
 {
-  gsdpState = 0;
-  gsdrState = 0;
-  gsdpPrevTimeMillis = 0;
-  gsdrPrevTimeMillis = 0;
   initialized = false;
 }
 
@@ -57,47 +128,7 @@ bool PushbuttonBase::isPressed()
 // should be called repeatedly in a loop.
 bool PushbuttonBase::getSingleDebouncedPress()
 {
-  uint16_t timeMillis = millis();
-
-  init(); // initialize if necessary
-
-  switch (gsdpState)
-  {
-    case 0:
-      if (!_isPressed())                  // if button is released
-      {
-        gsdpPrevTimeMillis = timeMillis;
-        gsdpState = 1;                    // proceed to next state
-      }
-      break;
-
-    case 1:
-      if ((uint16_t)(timeMillis - gsdpPrevTimeMillis >= 15) && !_isPressed()) // if 15 ms or longer has elapsed and button is still released
-        gsdpState = 2;                    // proceed to next state
-      else if (_isPressed())
-        gsdpState = 0;                    // button is pressed or bouncing, so go back to previous (initial) state
-      break;
-
-    case 2:
-      if (_isPressed())                   // if button is now pressed
-      {
-        gsdpPrevTimeMillis = timeMillis;
-        gsdpState = 3;                    // proceed to next state
-      }
-      break;
-
-    case 3:
-        if ((uint16_t)(timeMillis - gsdpPrevTimeMillis >= 15) && _isPressed())  // if 15 ms or longer has elapsed and button is still pressed
-      {
-        gsdpState = 0;                    // next state becomes initial state
-        return true;                      // report button press
-      }
-      else if (!_isPressed())
-        gsdpState = 2;                    // button is released or bouncing, so go back to previous state
-      break;
-  }
-
-  return false;
+  return pressState.getSingleDebouncedRisingEdge(isPressed());
 }
 
 // Uses a finite state machine to detect a single button release and returns
@@ -107,47 +138,7 @@ bool PushbuttonBase::getSingleDebouncedPress()
 // should be called repeatedly in a loop.
 bool PushbuttonBase::getSingleDebouncedRelease()
 {
-  uint16_t timeMillis = millis();
-
-  init(); // initialize if necessary
-
-  switch (gsdrState)
-  {
-    case 0:
-      if (_isPressed())                   // if button is pressed
-      {
-        gsdrPrevTimeMillis = timeMillis;
-        gsdrState = 1;                    // proceed to next state
-      }
-      break;
-
-    case 1:
-      if ((uint16_t)(timeMillis - gsdrPrevTimeMillis) >= 15 && _isPressed())  // if 15 ms or longer has elapsed and button is still pressed
-        gsdrState = 2;                    // proceed to next state
-      else if (!_isPressed())
-        gsdrState = 0;                    // button is released or bouncing, so go back to previous (initial) state
-      break;
-
-    case 2:
-      if (!_isPressed())                  // if button is now released
-      {
-        gsdrPrevTimeMillis = timeMillis;
-        gsdrState = 3;                    // proceed to next state
-      }
-      break;
-
-    case 3:
-      if ((uint16_t)(timeMillis - gsdrPrevTimeMillis) >= 15) && !_isPressed()) // if 15 ms or longer has elapsed and button is still released
-      {
-        gsdrState = 0;                    // next state becomes initial state
-        return true;                      // report button release
-      }
-      else if (_isPressed())
-        gsdrState = 2;                    // button is pressed or bouncing, so go back to previous state
-      break;
-  }
-
-  return false;
+  return pressState.getSingleDebouncedRisingEdge(!isPressed());
 }
 
 // constructor; takes arguments specifying whether to enable internal pull-up
@@ -163,9 +154,13 @@ Pushbutton::Pushbutton(uint8_t pin, uint8_t pullUp, uint8_t defaultState)
 void Pushbutton::init2()
 {
   if (_pullUp == PULL_UP_ENABLED)
+  {
     pinMode(_pin, INPUT_PULLUP);
+  }
   else
+  {
     pinMode(_pin, INPUT); // high impedance
+  }
 
   delayMicroseconds(5); // give pull-up time to stabilize
 }
