@@ -75,35 +75,26 @@ bool PushbuttonStateMachine::getSingleDebouncedRisingEdge(bool value)
   return false;
 }
 
-PushbuttonBase::PushbuttonBase()
-{
-  initialized = false;
-}
-
 // wait for button to be pressed
 void PushbuttonBase::waitForPress()
 {
-  init(); // initialize if necessary
-
   do
   {
-    while (!_isPressed()); // wait for button to be pressed
+    while (!isPressed()); // wait for button to be pressed
     delay(10);            // debounce the button press
   }
-  while (!_isPressed());   // if button isn't still pressed, loop
+  while (!isPressed());   // if button isn't still pressed, loop
 }
 
 // wait for button to be released
 void PushbuttonBase::waitForRelease()
 {
-  init(); // initialize if necessary
-
   do
   {
-    while (_isPressed()); // wait for button to be released
+    while (isPressed()); // wait for button to be released
     delay(10);           // debounce the button release
   }
-  while (_isPressed());   // if button isn't still released, loop
+  while (isPressed());   // if button isn't still released, loop
 }
 
 // wait for button to be pressed, then released
@@ -111,14 +102,6 @@ void PushbuttonBase::waitForButton()
 {
   waitForPress();
   waitForRelease();
-}
-
-// indicates whether button is pressed
-bool PushbuttonBase::isPressed()
-{
-  init(); // initialize if necessary
-
-  return _isPressed();
 }
 
 // Uses a finite state machine to detect a single button press and returns
@@ -145,12 +128,12 @@ bool PushbuttonBase::getSingleDebouncedRelease()
 // and the default state of the pin that the button is connected to
 Pushbutton::Pushbutton(uint8_t pin, uint8_t pullUp, uint8_t defaultState)
 {
+  initialized = false;
   _pin = pin;
   _pullUp = pullUp;
   _defaultState = defaultState;
 }
 
-// initializes I/O pin for use as button inputs
 void Pushbutton::init2()
 {
   if (_pullUp == PULL_UP_ENABLED)
@@ -165,8 +148,8 @@ void Pushbutton::init2()
   delayMicroseconds(5); // give pull-up time to stabilize
 }
 
-// button is pressed if pin state differs from default state
-inline bool Pushbutton::_isPressed()
+bool Pushbutton::isPressed()
 {
-  return (digitalRead(_pin) == LOW) ^ (_defaultState == DEFAULT_STATE_LOW);
+  init();  // initialize if needed
+  return digitalRead(_pin) != _defaultState;
 }

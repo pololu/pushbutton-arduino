@@ -43,8 +43,6 @@ class PushbuttonBase
 {
 public:
 
-  PushbuttonBase();
-
   // wait for button to be pressed, released, or pressed and released
   void waitForPress();
   void waitForRelease();
@@ -56,32 +54,12 @@ public:
   bool getSingleDebouncedRelease();
 
   // indicates whether button is currently pressed
-  bool isPressed();
-
-  // Initializes I/O pin for use as button input.
-  // This gets called automatically so normally you will not need to call this,
-  // but it might be useful if the pin for the button is in the wrong state.
-  virtual void init2() = 0;
-
-protected:
-
-  virtual bool _isPressed() = 0;
+  virtual bool isPressed() = 0;
 
 private:
 
   PushbuttonStateMachine pressState;
   PushbuttonStateMachine releaseState;
-  bool initialized;
-
-  // TODO: move all this init stuff down into Pushbutton
-  inline void init()
-  {
-    if (!initialized)
-    {
-      initialized = true;
-      init2();
-    }
-  }
 };
 
 /* \class Pushbutton Pushbutton.h
@@ -97,14 +75,22 @@ public:
   Pushbutton(uint8_t pin, uint8_t pullUp = PULL_UP_ENABLED,
       uint8_t defaultState = DEFAULT_STATE_HIGH);
 
-  virtual void init2();
+  void init()
+  {
+    if (!initialized)
+    {
+      initialized = true;
+      init2();
+    }
+  }
 
-protected:
+  void init2();
 
-  virtual bool _isPressed();
+  virtual bool isPressed();
 
 private:
 
+  bool initialized;
   uint8_t _pin;
   bool _pullUp;
   bool _defaultState;
