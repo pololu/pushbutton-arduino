@@ -1,9 +1,13 @@
+// Copyright (C) Pololu Corporation.  See LICENSE.txt for details.
+
 /*! \file Pushbutton.h
  *
- * See the Pushbutton class reference for more information about this library.
+ * This is the main header file for the Pushbutton library.
  *
- * \class Pushbutton Pushbutton.h
- * \brief Read button presses and releases with debouncing
+ * For an overview of the library's features, see
+ * https://github.com/pololu/pushbutton-arduino.  That is the main repository
+ * for the library, though copies of the library may exist in other
+ * repositories.
  *
  */
 
@@ -12,16 +16,18 @@
 
 #include <Arduino.h>
 
-// This ZUMO_BUTTON definition is for the Zumo Shield.  It doesn't
-// really belong here in this general Pushbutton library and will
-// probably be removed in the future.
-#define ZUMO_BUTTON 12
-
 #define PULL_UP_DISABLED    0
 #define PULL_UP_ENABLED     1
 
 #define DEFAULT_STATE_LOW   0
 #define DEFAULT_STATE_HIGH  1
+
+/*! \brief The pin used for the button on the
+ * [Zumo Shield for Arduino](http://www.pololu.com/product/2504).
+ *
+ * This does not really belong here in this general pushbutton library and will
+ * probably be removed in the future. */
+#define ZUMO_BUTTON 12
 
 class PushbuttonStateMachine
 {
@@ -36,6 +42,7 @@ private:
 class PushbuttonBase
 {
 public:
+
   PushbuttonBase();
 
   // wait for button to be pressed, released, or pressed and released
@@ -66,6 +73,7 @@ private:
   PushbuttonStateMachine releaseState;
   bool initialized;
 
+  // TODO: move all this init stuff down into Pushbutton
   inline void init()
   {
     if (!initialized)
@@ -76,9 +84,14 @@ private:
   }
 };
 
+/* \class Pushbutton Pushbutton.h
+ * \brief Interface with pushbuttons on dedicated pins.
+ *
+ */
 class Pushbutton : public PushbuttonBase
 {
 public:
+
   // constructor; takes arguments specifying whether to enable internal pull-up
   // and the default state of the pin that the button is connected to
   Pushbutton(uint8_t pin, uint8_t pullUp = PULL_UP_ENABLED,
@@ -87,9 +100,11 @@ public:
   virtual void init2();
 
 protected:
+
   virtual bool _isPressed();
 
 private:
+
   uint8_t _pin;
   bool _pullUp;
   bool _defaultState;
