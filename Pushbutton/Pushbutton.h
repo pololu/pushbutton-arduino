@@ -75,6 +75,10 @@ public:
   Pushbutton(uint8_t pin, uint8_t pullUp = PULL_UP_ENABLED,
       uint8_t defaultState = DEFAULT_STATE_HIGH);
 
+  virtual bool isPressed();
+
+private:
+
   void init()
   {
     if (!initialized)
@@ -85,10 +89,6 @@ public:
   }
 
   void init2();
-
-  virtual bool isPressed();
-
-private:
 
   bool initialized;
   uint8_t _pin;
