@@ -75,7 +75,6 @@ bool PushbuttonStateMachine::getSingleDebouncedRisingEdge(bool value)
   return false;
 }
 
-// wait for button to be pressed
 void PushbuttonBase::waitForPress()
 {
   do
@@ -86,7 +85,6 @@ void PushbuttonBase::waitForPress()
   while (!isPressed());   // if button isn't still pressed, loop
 }
 
-// wait for button to be released
 void PushbuttonBase::waitForRelease()
 {
   do
@@ -97,35 +95,22 @@ void PushbuttonBase::waitForRelease()
   while (isPressed());   // if button isn't still released, loop
 }
 
-// wait for button to be pressed, then released
 void PushbuttonBase::waitForButton()
 {
   waitForPress();
   waitForRelease();
 }
 
-// Uses a finite state machine to detect a single button press and returns
-// true to indicate the press (false otherwise).  It requires the button to be
-// released for at least 15 ms and then pressed for at least 15 ms before
-// reporting the press.  This function handles all necessary debouncing and
-// should be called repeatedly in a loop.
 bool PushbuttonBase::getSingleDebouncedPress()
 {
   return pressState.getSingleDebouncedRisingEdge(isPressed());
 }
 
-// Uses a finite state machine to detect a single button release and returns
-// true to indicate the release (false otherwise).  It requires the button to be
-// pressed for at least 15 ms and then released for at least 15 ms before
-// reporting the release.  This function handles all necessary debouncing and
-// should be called repeatedly in a loop.
 bool PushbuttonBase::getSingleDebouncedRelease()
 {
-  return pressState.getSingleDebouncedRisingEdge(!isPressed());
+  return releaseState.getSingleDebouncedRisingEdge(!isPressed());
 }
 
-// constructor; takes arguments specifying whether to enable internal pull-up
-// and the default state of the pin that the button is connected to
 Pushbutton::Pushbutton(uint8_t pin, uint8_t pullUp, uint8_t defaultState)
 {
   initialized = false;

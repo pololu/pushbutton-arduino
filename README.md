@@ -97,9 +97,10 @@ For complete documentation of this library, including many features that were no
 ## Version history
 
 * 1.1.0 (2014 Dec 01):
-** Added the PushbuttonBase class, which allows custom pushbutton classes with their own unique ways of reading the state of the button.
-** Fixed a problem in the logic for getSingleDebouncedPress().
-** Added the PushbuttonStateMachine class to reduce code duplication.
-** Moved the library to its own repository at https://github.com/pololu/pushbutton-arduino.
+    * Added the PushbuttonBase class, which allows custom pushbutton classes with their own unique ways of reading the state of the button.
+    * Changed all booleans (which are actually uint8_t) to bools.
+    * Fixed a problem in the logic for getSingleDebouncedPress().
+    * Added the PushbuttonStateMachine class to reduce code duplication.
+    * Moved the library to its own repository at https://github.com/pololu/pushbutton-arduino.
 * 1.0.1 (2014 Jan 22): Fixed it to work properly with multiple instances.  Improved the debouncing logic and reduced the width of PrevTimeMillis variables. This release was from commit pololu/zumo-shield@8c4e8f5.
 * 1.0.0 (2012 Nov 09): Original release.  At this time, the Pushbutton library lived in https://github.com/pololu/zumo-shield and this release was from commit pololu/zumo-shield@a02cf00.
