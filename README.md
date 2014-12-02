@@ -1,7 +1,7 @@
 # Pushbutton library for Arduino
 
 Version: 1.1.0<br/>
-Release date: 2014-12-01<br/>
+Release date: 2014 Dec 01<br/>
 [www.pololu.com](http://www.pololu.com/)
 
 ## Summary
@@ -26,9 +26,10 @@ Download the [pushbutton-arduino library from github](http://pololu.github.io/),
 
 ## Creating a Pushbutton object
 
-To create a Pushbutton object with default settings, which enables the internal pull-up on the pin and interprets a high pin value as the default (unpressed) state of the button, put this line near the top of your sketch:
+To create a Pushbutton object with default settings, which enables the internal pull-up on the pin and interprets a high pin value as the default (unpressed) state of the button, put these lines near the top of your sketch:
 
 ~~~{.cpp}
+#include <Pushbutton.h>
 Pushbutton button(BUTTON_PIN);
 ~~~
 
