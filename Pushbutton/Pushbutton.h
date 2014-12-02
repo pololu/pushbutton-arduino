@@ -14,22 +14,22 @@
 
 #include <Arduino.h>
 
-/*! \brief Indicates the that pull-up resistor should be disabled. */
+/*! Indicates the that pull-up resistor should be disabled. */
 #define PULL_UP_DISABLED    0
 
-/*! \brief Indicates the that pull-up resistor should be enabled. */
+/*! Indicates the that pull-up resistor should be enabled. */
 #define PULL_UP_ENABLED     1
 
-/*! \brief Indicates that the default (released) state of the button is when the
+/*! Indicates that the default (released) state of the button is when the
  *  I/O line reads low. */
 #define DEFAULT_STATE_LOW   0
 
-/*! \brief Indicates that the default (released) state of the button is when the
+/*! Indicates that the default (released) state of the button is when the
  *  I/O line reads high. */
 #define DEFAULT_STATE_HIGH  1
 
-/*! \brief The pin used for the button on the
- * [Zumo Shield for Arduino](http://www.pololu.com/product/2504).
+/*! The pin used for the button on the
+ * [Zumo Shield for Arduino](http://www.pololu.com/product/2508).
  *
  * This does not really belong here in this general pushbutton library and will
  * probably be removed in the future. */
