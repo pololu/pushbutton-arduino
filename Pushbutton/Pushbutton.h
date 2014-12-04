@@ -9,8 +9,7 @@
  * for the library, though copies of the library may exist in other
  * repositories. */
 
-#ifndef Pushbutton_h
-#define Pushbutton_h
+#pragma once
 
 #include <Arduino.h>
 
@@ -168,5 +167,3 @@ private:
   bool _pullUp;
   bool _defaultState;
 };
-
-#endif
