@@ -1,7 +1,7 @@
 # Pushbutton library for Arduino
 
 Version: 1.1.0<br/>
-Release date: 2014 Dec 05<br/>
+Release date: 2014 Dec 09<br/>
 [www.pololu.com](http://www.pololu.com/)
 
 ## Summary
@@ -22,7 +22,7 @@ This library supports many different ways of connecting a button to your board. 
 
 ### Software
 
-Download the [pushbutton-arduino library from github](https://github.com/pololu/pushbutton-arduino), decompress it, and drag the "Pushbutton" folder into the "libraries" subdirectory inside your Arduino sketchbook directory.  You can view your sketchbook location by selecting File->Preferences in the Arduino environment.  If there is not already a "libraries" folder in that location, you should create it yourself.  After installing the library, restart the Arduino environment.  Example code for using this library can be found in the File->Examples menu.
+Download the [pushbutton-arduino library from GitHub](https://github.com/pololu/pushbutton-arduino), decompress it, and drag the "Pushbutton" folder into the "libraries" subdirectory inside your Arduino sketchbook directory.  You can view your sketchbook location by selecting File->Preferences in the Arduino environment.  If there is not already a "libraries" folder in that location, you should create it yourself.  After installing the library, restart the Arduino environment.  Example code for using this library can be found in the File->Examples menu.
 
 ## Creating a Pushbutton object
 
@@ -97,7 +97,7 @@ For complete documentation of this library, including many features that were no
 
 ## Version history
 
-* 1.1.0 (2014 Dec 05):
+* 1.1.0 (2014 Dec 09):
     * Added the PushbuttonBase class, which allows custom pushbutton classes with their own unique ways of reading the state of the button.
     * Changed all booleans (which are actually uint8_t) to bools.
     * Fixed a problem in the logic for getSingleDebouncedPress().
