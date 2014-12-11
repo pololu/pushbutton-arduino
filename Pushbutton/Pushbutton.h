@@ -149,7 +149,7 @@ public:
    *
    * @param defaultState Specifies the voltage level that corresponds to the
    * button's default (released) state.  This should be either
-   * #DEFAULT_STATE_HIGH (which is the default if this arugment is omitted) or
+   * #DEFAULT_STATE_HIGH (which is the default if this argument is omitted) or
    * #DEFAULT_STATE_LOW. */
   Pushbutton(uint8_t pin, uint8_t pullUp = PULL_UP_ENABLED,
       uint8_t defaultState = DEFAULT_STATE_HIGH);
