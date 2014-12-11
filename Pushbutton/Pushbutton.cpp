@@ -1,7 +1,5 @@
 #include "Pushbutton.h"
 
-// This command and the corresponding endcond command.
-// hide PushbuttonStateMachine from Doxygen.
 // \cond
 
 PushbuttonStateMachine::PushbuttonStateMachine()
