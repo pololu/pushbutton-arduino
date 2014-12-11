@@ -145,7 +145,7 @@ public:
    *
    * @param pullUp Specifies whether the pin's internal pull-up resistor should
    * be enabled.  This should be either #PULL_UP_ENABLED (which is the default if
-   * the argment is omitted) or #PULL_UP_DISABLED.
+   * the argument is omitted) or #PULL_UP_DISABLED.
    *
    * @param defaultState Specifies the voltage level that corresponds to the
    * button's default (released) state.  This should be either
