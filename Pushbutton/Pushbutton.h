@@ -129,8 +129,8 @@ private:
 
 /** \brief Main class for interfacing with pushbuttons.
  *
- * This class can inteface with any pushbutton whose state can be read with
- * the `digitalRead` funtion, which is part of the Arduino core.
+ * This class can interface with any pushbutton whose state can be read with
+ * the `digitalRead` function, which is part of the Arduino core.
  *
  * See https://github.com/pololu/pushbutton-arduino for an overview
  * of the different ways to use this class. */
