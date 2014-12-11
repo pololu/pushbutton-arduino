@@ -1,7 +1,7 @@
 # Pushbutton library for Arduino
 
 Version: 1.1.0<br/>
-Release date: 2014 Dec 09<br/>
+Release date: 2014 Dec 11<br/>
 [www.pololu.com](http://www.pololu.com/)
 
 ## Summary
@@ -97,7 +97,7 @@ For complete documentation of this library, including many features that were no
 
 ## Version history
 
-* 1.1.0 (2014 Dec 09):
+* 1.1.0 (2014 Dec 11):
     * Added the PushbuttonBase class, which allows custom pushbutton classes with their own unique ways of reading the state of the button.
     * Changed all booleans (which are actually uint8_t) to bools.
     * Fixed a problem in the logic for getSingleDebouncedPress().
