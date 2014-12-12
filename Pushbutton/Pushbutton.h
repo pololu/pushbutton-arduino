@@ -1,4 +1,4 @@
-// Copyright (C) Pololu Corporation.  See LICENSE.txt for details.
+// Copyright Pololu Corporation.  For more information, see http://www.pololu.com/
 
 /*! \file Pushbutton.h
  *
