@@ -93,7 +93,7 @@ void loop() {
 
 ## Documentation
 
-For complete documentation of this library, including many features that were not mentioned here, see [the Pushbutton.h file documentation](https://pololu.github.io/pushbutton-arduino/_pushbutton_8h.html) from https://pololu.github.io/fastgpio-arduino.
+For complete documentation of this library, including many features that were not mentioned here, see [the Pushbutton.h file documentation](https://pololu.github.io/pushbutton-arduino/_pushbutton_8h.html) from https://pololu.github.io/pushbutton-arduino.
 
 ## Version history
 
