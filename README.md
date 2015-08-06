@@ -77,13 +77,13 @@ These functions wait for an event to happen before returning, so your board cann
 
 The Pushbutton class provides two non-blocking that allow you to monitor the button for transitions.  These functions are powerful and can be used in almost any situation.
 
-The `getSingleDebouncedButtonPress()` function will return true once for each time it detects the button changing from the released state to the pressed state.  The `getSingleDebouncedButtonRelease()` function will return true once for each time it detects the button changing from the pressed state to the released state.
+The `getSingleDebouncedPress()` function will return true once for each time it detects the button changing from the released state to the pressed state.  The `getSingleDebouncedRelease()` function will return true once for each time it detects the button changing from the pressed state to the released state.
 
 These functions are non-blocking and are meant to be called repeatedly in a loop:
 
 ~~~{.cpp}
 void loop() {
-  if (button.getSingleDebouncedButtonPress())
+  if (button.getSingleDebouncedPress())
   {
     // The button was pressed, so perform some action.
   }
