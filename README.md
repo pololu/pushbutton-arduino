@@ -75,7 +75,7 @@ These functions wait for an event to happen before returning, so your board cann
 
 ## Monitoring for an event
 
-The Pushbutton class provides two non-blocking that allow you to monitor the button for transitions.  These functions are powerful and can be used in almost any situation.
+The Pushbutton class provides two non-blocking functions that allow you to monitor the button for transitions.  These functions are powerful and can be used in almost any situation.
 
 The `getSingleDebouncedPress()` function will return true once for each time it detects the button changing from the released state to the pressed state.  The `getSingleDebouncedRelease()` function will return true once for each time it detects the button changing from the pressed state to the released state.
 
